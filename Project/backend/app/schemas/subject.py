@@ -1,26 +1,3 @@
-# from pydantic import BaseModel
-# from uuid import UUID
-# from datetime import datetime
-
-# class SubjectCreate(BaseModel):
-#     name: str
-#     code: str
-#     department_id: UUID
-#     is_open_elective: bool
-
-# class SubjectOut(BaseModel):
-#     id: UUID
-#     name: str
-#     code: str
-#     department_id: UUID
-#     is_open_elective: bool
-#     created_at: datetime
-#     updated_at: datetime
-#     is_active: bool
-
-#     class Config:
-#         orm_mode = True
-
 from pydantic import BaseModel, Field, ConfigDict
 from typing import Optional
 from datetime import datetime
