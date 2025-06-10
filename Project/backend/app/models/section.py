@@ -2,7 +2,7 @@ import uuid
 from sqlalchemy import Column, String, Boolean, ForeignKey, DateTime
 from sqlalchemy.dialects.postgresql import UUID
 from datetime import datetime
-from app.core.database import Base
+from app.db.database import Base
 
 class Section(Base):
     __tablename__ = 'sections'
