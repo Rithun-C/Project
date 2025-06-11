@@ -6,8 +6,6 @@ from datetime import timedelta
 from app.core.config import settings
 from app.core.security import create_access_token, verify_password, get_password_hash
 from app.db.session import get_db
-from app.models.teacher import Teacher
-from app.models.student import Student
 from app.schemas.auth import Token, UserLogin, UserRegister, UserResponse
 from app.services.auth_service import AuthService
 

@@ -1,4 +1,4 @@
-from pydantic import BaseModel,Field,  ConfigDict
+from pydantic import BaseModel, Field, ConfigDict
 from typing import Optional
 from uuid import UUID
 from datetime import datetime
@@ -10,6 +10,7 @@ class TeacherBase(BaseModel):
     email: str = Field(..., description="Teachers email address")
     department_id: UUID = Field(..., description="ID of the department this teacher belongs to")
     is_active: bool = Field(True, description="Whether the Teachers is active")
+    password: str = Field(..., min_length=6, max_length=128, description="Password for the teacher")  # <-- Added here
 
 class TeacherCreate(TeacherBase):
     """Schema for creating a new Teacher"""
@@ -18,9 +19,10 @@ class TeacherCreate(TeacherBase):
 class TeacherUpdate(BaseModel):
     """Schema for updating a Teachers"""
     name: Optional[str] = Field(None, min_length=1, max_length=255, description="Teachers name")
-    email: Optional[str] = Field(None, regex=r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}, description="Valid email address')
+    email: Optional[str] = Field(None, regex=r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}', description="Valid email address")
     department_id: Optional[UUID] = Field(None, description="ID of the section this Teachers belongs to")
     is_active: Optional[bool] = Field(None, description="Whether the Teachers is active")
+    password: Optional[str] = Field(None, min_length=6, max_length=128, description="Password for the teacher")  # Optional update
 
 class TeacherResponse(TeacherBase):
     """Schema for Teachers response"""
@@ -69,19 +71,6 @@ class TeacherDeleteResponse(BaseModel):
     """Response schema for Teachers deletion"""
     message: str = "Teachers deleted successfully"
     id: UUID
-
-
-
-# class BulkTeacherCreate(BaseModel):
-#     """Schema for creating multiple teachers"""
-#     teachers_list: list[TeacherCreate] = Field(..., min_items=1, description="List of teachers to create")
-
-# class BulkTeachersCreateResponse(BaseModel):
-#     """Response schema for bulk Teachers creation"""
-#     message: str = "Teacher created successfully"
-#     created_count: int = Field(..., description="Number of teachers created")
-#     teachers: list[TeacherResponse]
-
 
 class TeacherBySection(BaseModel):
     """Schema for getting teachers by section"""

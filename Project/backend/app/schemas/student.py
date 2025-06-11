@@ -10,17 +10,19 @@ class StudentBase(BaseModel):
     email: str = Field(..., description="Student email address")
     section_id: UUID = Field(..., description="ID of the section this student belongs to")
     is_active: bool = Field(True, description="Whether the student is active")
+    password: str = Field(..., min_length=6, max_length=128, description="Password for the student")  # <-- Added here
 
 class StudentCreate(StudentBase):
     """Schema for creating a new student"""
-    email: str = Field(..., regex=r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}, description="Valid email address')
+    email: str = Field(..., regex=r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}', description="Valid email address")
 
 class StudentUpdate(BaseModel):
     """Schema for updating a student"""
     name: Optional[str] = Field(None, min_length=1, max_length=255, description="Student name")
-    email: Optional[str] = Field(None, regex=r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}, description="Valid email address')
+    email: Optional[str] = Field(None, regex=r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}', description="Valid email address")
     section_id: Optional[UUID] = Field(None, description="ID of the section this student belongs to")
     is_active: Optional[bool] = Field(None, description="Whether the student is active")
+    password: Optional[str] = Field(None, min_length=6, max_length=128, description="Password for the student")  # Optional update
 
 class StudentResponse(StudentBase):
     """Schema for student response"""
@@ -70,8 +72,6 @@ class StudentDeleteResponse(BaseModel):
     message: str = "Student deleted successfully"
     id: UUID
 
-
-
 class BulkStudentCreate(BaseModel):
     """Schema for creating multiple students"""
     students_list: list[StudentCreate] = Field(..., min_items=1, description="List of students to create")
@@ -81,7 +81,6 @@ class BulkStudentCreateResponse(BaseModel):
     message: str = "Students created successfully"
     created_count: int = Field(..., description="Number of students created")
     students: list[StudentResponse]
-
 
 class StudentsBySection(BaseModel):
     """Schema for getting students by section"""
