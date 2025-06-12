@@ -57,7 +57,7 @@ async def register_teacher(
     return UserResponse(
         id=teacher.id,
         email=teacher.email,
-        full_name=teacher.full_name,
+        name=teacher.name,
         user_type="teacher"
     )
 
@@ -78,7 +78,7 @@ async def register_student(
     return UserResponse(
         id=student.id,
         email=student.email,
-        full_name=student.full_name,
+        name=student.name,
         user_type="student"
     )
 
@@ -98,7 +98,7 @@ async def get_current_user(
     return UserResponse(
         id=user.id,
         email=user.email,
-        full_name=user.full_name,
+        name=user.name,
         user_type=user.user_type
     )
 

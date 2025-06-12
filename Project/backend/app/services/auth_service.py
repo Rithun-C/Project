@@ -22,8 +22,8 @@ class AuthService:
         hashed_password = get_password_hash(data.password)
         new_teacher = Teacher(
             email=data.email,
-            full_name=data.full_name,
-            hashed_password=hashed_password,
+            name=data.name,
+            password=hashed_password,
             is_active=True
         )
         db.add(new_teacher)
@@ -36,8 +36,8 @@ class AuthService:
         hashed_password = get_password_hash(data.password)
         new_student = Student(
             email=data.email,
-            full_name=data.full_name,
-            hashed_password=hashed_password,
+            name=data.name,
+            password=hashed_password,
             is_active=True
         )
         db.add(new_student)
