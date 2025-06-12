@@ -28,7 +28,7 @@ class UserLogin(BaseModel):
 
 class UserRegister(BaseModel):
     """Schema for Registration Input (shared for all user types)"""
-    full_name: str = Field(..., min_length=1, max_length=255)
+    name: str = Field(..., min_length=1, max_length=255)
     email: EmailStr
     password: str
     user_type: UserType
@@ -40,5 +40,5 @@ class UserResponse(BaseModel):
     """Schema for Authenticated User Info"""
     id: UUID
     email: EmailStr
-    full_name: str
+    name: str
     user_type: UserType
