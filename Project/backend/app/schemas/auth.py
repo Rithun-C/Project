@@ -3,7 +3,7 @@ from uuid import UUID
 from typing import Literal, Optional
 
 
-UserType = Literal["teacher", "student", "admin"]  # <-- added "admin"
+UserType = Literal["teacher", "student", "admin"]  
 
 
 class Token(BaseModel):

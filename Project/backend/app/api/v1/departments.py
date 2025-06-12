@@ -1,19 +1,12 @@
 from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
-from app.schemas.department import DepartmentCreate, DepartmentOut
+from app.schemas.department import DepartmentCreate, DepartmentResponse
 from app.models import Department
-from app.core.database import SessionLocal
+from app.db.session import get_db
 
 router = APIRouter(prefix="/departments", tags=["departments"])
 
-def get_db():
-    db = SessionLocal()
-    try:
-        yield db
-    finally:
-        db.close()
-
-@router.post("/", response_model=DepartmentOut)
+@router.post("/", response_model=DepartmentResponse)
 def create_department(data: DepartmentCreate, db: Session = Depends(get_db)):
     department = Department(**data.dict())
     db.add(department)
@@ -21,6 +14,6 @@ def create_department(data: DepartmentCreate, db: Session = Depends(get_db)):
     db.refresh(department)
     return department
 
-@router.get("/", response_model=list[DepartmentOut])
+@router.get("/", response_model=list[DepartmentResponse])
 def get_departments(db: Session = Depends(get_db)):
     return db.query(Department).all()

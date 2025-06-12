@@ -1,19 +1,12 @@
 from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
-from app.schemas.section import SectionCreate, SectionOut
+from app.schemas.section import SectionCreate, SectionResponse
 from app.models import Section
-from app.core.database import SessionLocal
+from app.db.session import get_db
 
 router = APIRouter(prefix="/sections", tags=["sections"])
 
-def get_db():
-    db = SessionLocal()
-    try:
-        yield db
-    finally:
-        db.close()
-
-@router.post("/", response_model=SectionOut)
+@router.post("/", response_model=SectionResponse)
 def create_section(data: SectionCreate, db: Session = Depends(get_db)):
     section = Section(**data.dict())
     db.add(section)
@@ -21,7 +14,7 @@ def create_section(data: SectionCreate, db: Session = Depends(get_db)):
     db.refresh(section)
     return section
 
-@router.get("/", response_model=list[SectionOut])
+@router.get("/", response_model=list[SectionResponse])
 def get_sections(db: Session = Depends(get_db)):
     return db.query(Section).all()
 

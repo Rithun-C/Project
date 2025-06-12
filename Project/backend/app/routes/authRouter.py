@@ -1,5 +1,3 @@
-# app/routers/auth_router.py
-
 from fastapi import APIRouter
 from app.api.v1 import auth
 
