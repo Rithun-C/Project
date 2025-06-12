@@ -1,9 +1,5 @@
-# app/services/auth_service.py
-
 from sqlalchemy.orm import Session
-from fastapi.security import OAuth2PasswordBearer
 from jose import JWTError, jwt
-from datetime import datetime, timedelta
 
 from app.models.teacher import Teacher
 from app.models.student import Student

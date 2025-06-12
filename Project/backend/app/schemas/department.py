@@ -23,7 +23,7 @@ class DepartmentResponse(DepartmentBase):
     created_at: datetime = Field(..., description="When the department was created")
     updated_at: datetime = Field(..., description="When the department was last updated")
     
-    model_config = ConfigDict(from_attributes=True)
+    model_config = ConfigDict(from_attributes=True) #when u want to read anything from the database you need this 
 
 class DepartmentListResponse(BaseModel):
     """Schema for paginated department list response"""
@@ -39,7 +39,8 @@ class DepartmentSummary(BaseModel):
     name: str
     is_active: bool
     
-    model_config = ConfigDict(from_attributes=True)
+    model_config = ConfigDict(from_attributes=True) #when u want to read anything from the database you need this 
+
 
 class DepartmentQueryParams(BaseModel):
     """Schema for department query parameters"""
