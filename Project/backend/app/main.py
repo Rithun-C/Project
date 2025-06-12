@@ -1,11 +1,11 @@
 from fastapi import FastAPI
 from app.routes import authRouter
 from app.db.init_db import init_db
+from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI()
 
 
-from fastapi.middleware.cors import CORSMiddleware
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["http://localhost:3000"], 
@@ -16,6 +16,7 @@ app.add_middleware(
 
 
 init_db()
+
 @app.get("/")
 def read_root():
     return {"message": "Hello, FastAPI!"}

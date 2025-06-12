@@ -5,7 +5,7 @@ from uuid import UUID
 
 class AssignmentBase(BaseModel):
     """Base schema for Assignment with common fields"""
-    title: str = Field(..., min_length=1, max_length=255, description="Assignment title")
+    title: str = Field(..., min_length=1, max_length=255, description="Assignment title") #... for required
     subject_id: UUID = Field(..., description="ID of the subject this assignment belongs to")
     teacher_id: UUID = Field(..., description="ID of the teacher who created this assignment")
     section_id: Optional[UUID] = Field(None, description="ID of the section (optional)")
