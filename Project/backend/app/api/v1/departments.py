@@ -8,7 +8,7 @@ from app.api.v1.auth import oauth2_scheme
 from app.services.department_service import DepartmentService
 from app.services.auth_service import AuthService
 
-router = APIRouter(prefix="/departments", tags=["departments"])
+router = APIRouter()
 
 @router.post("/", response_model=DepartmentResponse)
 async def create_department(
