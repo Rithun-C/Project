@@ -21,7 +21,7 @@ async def create_Teacher(
     if not current_user or current_user.user_type not in ["admin", "teacher"]:
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,
-            detail="Only admins  can create teachers"
+            detail="Only admins can create teachers"
         )
     
     # Check if teacher already exists
