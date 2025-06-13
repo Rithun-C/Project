@@ -1,10 +1,10 @@
 from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
 from app.schemas.section import SectionCreate, SectionResponse
-from app.models import Section
+from app.models.section import Section
 from app.db.session import get_db
 
-router = APIRouter(prefix="/sections", tags=["sections"])
+router = APIRouter()
 
 @router.post("/", response_model=SectionResponse)
 def create_section(data: SectionCreate, db: Session = Depends(get_db)):

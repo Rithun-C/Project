@@ -1,7 +1,8 @@
 from sqlalchemy.orm import Session
 from typing import List, Optional
 
-from app.models import Subject, Student, Teacher, Syllabus, TeacherSubject
+from app.models.subject import Subject
+from app.models.SubjectTeacherSection import SubjectTeacherSection
 from app.schemas.subject import SubjectCreate, SubjectUpdate
 
 class SubjectService:
@@ -79,8 +80,8 @@ class SubjectService:
     def get_teacher_subjects(db: Session, teacher_id: int) -> List[Subject]:
         return (
             db.query(Subject)
-            .join(TeacherSubject, TeacherSubject.subject_id == Subject.id)
-            .filter(TeacherSubject.teacher_id == teacher_id)
+            .join(SubjectTeacherSection, SubjectTeacherSection.subject_id == Subject.id)
+            .filter(SubjectTeacherSection.teacher_id == teacher_id)
             .all()
         )
 
@@ -91,7 +92,4 @@ class SubjectService:
             return []
         return [teacher.to_dict() for teacher in subject.teachers]
 
-    @staticmethod
-    def get_subject_syllabus(db: Session, subject_id: int) -> Optional[dict]:
-        syllabus = db.query(Syllabus).filter(Syllabus.subject_id == subject_id).first()
-        return syllabus.to_dict() if syllabus else None
+    

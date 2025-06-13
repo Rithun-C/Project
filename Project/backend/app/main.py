@@ -20,18 +20,14 @@ app.add_middleware(
 
 init_db()
 
-@app.get("/")
-def read_root():
-    return {"message": "Hello, FastAPI!"}
-
 # Include the authentication router
-router.include_router(auth.router, prefix="/auth", tags=["authentication"])
-router.include_router(assignments.router, prefix="/assignments", tags=["assignments"])
-router.include_router(departments.router, prefix="/departments", tags=["departments"])
-router.include_router(quizzes.router, prefix="/quizzes", tags=["quizzes"])
-router.include_router(sections.router, prefix="/sections", tags=["sections"])
-router.include_router(students.router, prefix="/students", tags=["students"])
-router.include_router(subjects.router, prefix="/subjects", tags=["subjects"])
-router.include_router(teachers.router, prefix="/teachers", tags=["teachers"])
-router.include_router(tests.router, prefix="/tests", tags=["tests"])
-router.include_router(marks.router, prefix="/marks", tags=["marks"])
+app.include_router(auth.router, prefix="/auth", tags=["Authentication"])
+app.include_router(assignments.router, prefix="/assignments", tags=["Assignments"])
+app.include_router(departments.router, prefix="/departments", tags=["Departments"])
+app.include_router(quizzes.router, prefix="/quizzes", tags=["Quizzes"])
+app.include_router(sections.router, prefix="/sections", tags=["Sections"])
+app.include_router(students.router, prefix="/students", tags=["Students"])
+app.include_router(subjects.router, prefix="/subjects", tags=["Subjects"])
+app.include_router(teachers.router, prefix="/teachers", tags=["Teachers"])
+app.include_router(tests.router, prefix="/tests", tags=["Tests"])
+app.include_router(marks.router, prefix="/marks", tags=["Marks"])

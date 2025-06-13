@@ -1,5 +1,5 @@
 from app.schemas.quiz import QuizCreate, QuizResponse
-from app.models import Quiz         
+from app.models.quiz import Quiz         
 from app.db.session import get_db
 from sqlalchemy.orm import Session
 
