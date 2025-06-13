@@ -1,5 +1,5 @@
 from fastapi import FastAPI
-from app.routes import authRouter
+from app.routes import authRouter, studentRouter, teacherRouter
 from app.db.init_db import init_db
 from fastapi.middleware.cors import CORSMiddleware
 
@@ -23,3 +23,5 @@ def read_root():
 
 # Include the authentication router
 app.include_router(authRouter.router)
+app.include_router(studentRouter.router)
+app.include_router(teacherRouter.router)
