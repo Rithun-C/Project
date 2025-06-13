@@ -10,7 +10,6 @@ class Token(BaseModel):
     """Schema for JWT Token Response"""
     access_token: str
     token_type: str
-    user_type: UserType
     user_id: UUID
 
 

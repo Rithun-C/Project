@@ -18,3 +18,4 @@ def create_section(data: SectionCreate, db: Session = Depends(get_db)):
 def get_sections(db: Session = Depends(get_db)):
     return db.query(Section).all()
 
+

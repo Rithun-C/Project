@@ -30,7 +30,7 @@ export default function LoginPage() {
                 email: email,
                 password: password,
             });
-            if (res.data.status === "success") {
+            if (res.data.status === 200) {
                 router.push("/");
             }
         } catch (err) {
