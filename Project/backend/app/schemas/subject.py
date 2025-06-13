@@ -14,12 +14,12 @@ class SubjectBase(BaseModel):
 
 class SubjectCreate(SubjectBase):
     """Schema for creating a new subject"""
-    code: str = Field(..., min_length=1, max_length=50, regex=r'^[A-Z0-9]+, description="Subject code (uppercase alphanumeric)')
+    code: str = Field(..., min_length=1, max_length=50, pattern=r'^[A-Z0-9]+, description="Subject code (uppercase alphanumeric)')
 
 class SubjectUpdate(BaseModel):
     """Schema for updating a subject"""
     name: Optional[str] = Field(None, min_length=1, max_length=255, description="Subject name")
-    code: Optional[str] = Field(None, min_length=1, max_length=50, regex=r'^[A-Z0-9]+, description="Subject code (uppercase alphanumeric)')
+    code: Optional[str] = Field(None, min_length=1, max_length=50, pattern=r'^[A-Z0-9]+, description="Subject code (uppercase alphanumeric)')
     department_id: Optional[UUID] = Field(None, description="ID of the department this subject belongs to")
     is_open_elective: Optional[bool] = Field(None, description="Whether the subject is an open elective")
     is_active: Optional[bool] = Field(None, description="Whether the subject is active")
