@@ -7,6 +7,7 @@ from app.db.session import get_db
 from app.api.v1.auth import oauth2_scheme
 from app.services.department_service import DepartmentService
 from app.services.auth_service import AuthService
+from app.schemas.section import SectionListResponse
 
 router = APIRouter()
 
@@ -17,12 +18,12 @@ async def create_department(
     token: str = Depends(oauth2_scheme)
 ):
     """Create a new department (Admin/Teacher only)"""
-    current_user = AuthService.get_current_user(db, token)
-    if not current_user or current_user.user_type not in ["admin", "teacher"]:
-        raise HTTPException(
-            status_code=status.HTTP_403_FORBIDDEN,
-            detail="Only admins and teachers can create departments"
-        )
+    # current_user = AuthService.get_current_user(db, token)
+    # if not current_user or current_user.user_type not in ["admin", "teacher"]:
+    #     raise HTTPException(
+    #         status_code=status.HTTP_403_FORBIDDEN,
+    #         detail="Only admins and teachers can create departments"
+    #     )
     
     # Check if department already exists
     if DepartmentService.get_department_by_name(db, department_data.name):
@@ -30,7 +31,7 @@ async def create_department(
             status_code=status.HTTP_400_BAD_REQUEST,
             detail="department with this email already exists"
         )
-    
+    print("HI")
     department = DepartmentService.create_department(db, department_data)
     return department
 
@@ -119,3 +120,42 @@ async def update_department(
     
     return department
 
+@router.get("/{department_id}/sections", response_model=SectionListResponse)
+async def get_department(
+    department_id: int,
+    db: Session = Depends(get_db),
+    token: str = Depends(oauth2_scheme)
+):
+    """Get department by ID"""
+    current_user = AuthService.get_current_user(db, token)
+    if not current_user:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Authentication required"
+        )
+    
+    # departments can only view their own profile
+    if current_user.user_type == "department" and current_user.id != department_id:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="You can only view your own profile"
+        )
+    
+    department = DepartmentService.get_department_by_id(db, department_id)
+    if not department:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="department not found"
+        )
+        
+    # Assuming sections are a related field in the department model
+    if not hasattr(department, 'sections'):
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="No sections found for this department"
+        )
+        
+    # If sections are not loaded, you might need to query them separately
+    sections = DepartmentService.get_sections_by_department_id(db, department_id)
+    
+    return sections

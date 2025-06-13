@@ -1,6 +1,7 @@
 from app.schemas.department import DepartmentCreate, DepartmentResponse
 from app.db.session import get_db
 from sqlalchemy.orm import Session      
+from app.models.section import Section
 
 class DepartmentService:
     @staticmethod
@@ -45,3 +46,9 @@ class DepartmentService:
         db.commit()
         db.refresh(department)
         return department
+    
+    @staticmethod
+    def get_sections_by_department(db: Session, department_id: int) -> list:
+        """Get sections associated with a department"""
+        return db.query(Section).filter(Section.department_id == department_id).all()
+    

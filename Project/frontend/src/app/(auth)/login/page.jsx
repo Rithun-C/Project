@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react"
-
+import "../../globals.css";
 import { useState } from "react"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
@@ -30,7 +30,8 @@ export default function LoginPage() {
                 email: email,
                 password: password,
             });
-            if (res.data.status === "success") {
+            console.log(res.data);
+            if (res.status === 200) {
                 router.push("/");
             }
         } catch (err) {
@@ -45,7 +46,7 @@ export default function LoginPage() {
         <div className="flex min-h-screen items-center justify-center bg-gradient-to-b from-slate-50 to-slate-100 px-4 py-12 sm:px-6 lg:px-8">
             <div className="w-full max-w-md space-y-8">
                 <div className="text-center">
-                    <h1 className="text-3xl font-semibold tracking-tight text-slate-900">Welcome back</h1>
+                    <h1 className="text-3xl font-semibold tracking-tight --color-foreground">Welcome back</h1>
                     <p className="mt-2 text-sm text-slate-600">Sign in to your account to continue</p>
                 </div>
 
@@ -106,7 +107,7 @@ export default function LoginPage() {
                             </div>
                         </div>
 
-                        <Button type="submit" className="w-full bg-slate-900 text-white hover:bg-slate-800" disabled={isLoading}>
+                        <Button onClick={handleSubmit} type="submit" className="w-full bg-teal-800 text-white hover:bg-teal-800" disabled={isLoading}>
                             {isLoading ? (
                                 <div className="flex items-center justify-center">
                                     <div className="h-4 w-4 animate-spin rounded-full border-2 border-slate-200 border-t-white"></div>

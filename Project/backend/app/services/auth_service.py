@@ -44,7 +44,7 @@ class AuthService:
     @staticmethod
     def authenticate_user(db: Session, email: str, password: str):
         user = AuthService.get_user_by_email(db, email)
-        if not user or not verify_password(password, user.hashed_password):
+        if not user or not verify_password(password, user.password):
             return None
         return user
 
