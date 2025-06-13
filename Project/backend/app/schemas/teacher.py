@@ -19,7 +19,7 @@ class TeacherCreate(TeacherBase):
 class TeacherUpdate(BaseModel):
     """Schema for updating a Teachers"""
     name: Optional[str] = Field(None, min_length=1, max_length=255, description="Teachers name")
-    email: Optional[str] = Field(None, regex=r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}', description="Valid email address")
+    email: Optional[str] = Field(None, pattern=r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}', description="Valid email address")
     department_id: Optional[UUID] = Field(None, description="ID of the section this Teachers belongs to")
     is_active: Optional[bool] = Field(None, description="Whether the Teachers is active")
     password: Optional[str] = Field(None, min_length=6, max_length=128, description="Password for the teacher")  # Optional update
