@@ -15,8 +15,9 @@ router = APIRouter()
 async def create_department(
     department_data: DepartmentCreate,
     db: Session = Depends(get_db),
-    token: str = Depends(oauth2_scheme)
+    #token: str = Depends(oauth2_scheme)
 ):
+    print("hi")
     """Create a new department (Admin/Teacher only)"""
     # current_user = AuthService.get_current_user(db, token)
     # if not current_user or current_user.user_type not in ["admin", "teacher"]:
