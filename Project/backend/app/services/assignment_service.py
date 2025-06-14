@@ -6,11 +6,11 @@ from sqlalchemy.orm import Session
 class AssignmentService:    
     def create_assignment(self, db: Session, assignment_data: AssignmentCreate) -> AssignmentResponse:
         """Create a new assignment"""
-        new_assignment = Assignment(**assignment_data.dict())
+        new_assignment = Assignment(**assignment_data)
         db.add(new_assignment)
         db.commit()
         db.refresh(new_assignment)
-        return new_assignment
+        return AssignmentResponse.model_validate(new_assignment)
     
     
     def get_assignments(
@@ -35,14 +35,14 @@ class AssignmentService:
             query = query.filter(Assignment.title.ilike(f"%{search}%"))
         
         assignments = query.offset(skip).limit(limit).all()
-        return assignments
+        return [AssignmentResponse.model_validate(assignment) for assignment in assignments]
     
     def get_assignment_by_id(self, db: Session, assignment_id: int) -> AssignmentResponse:  
         """Get assignment by ID"""
         assignment = db.query(Assignment).filter(Assignment.id == assignment_id).first()
         if not assignment:
             raise ValueError("Assignment not found")
-        return assignment     
+        return AssignmentResponse.model_validate(assignment)     
     
     def update_assignment(self, db: Session, assignment_id: int, assignment_data: AssignmentCreate) -> AssignmentResponse:
         """Update an existing assignment"""
@@ -55,10 +55,11 @@ class AssignmentService:
         
         db.commit()
         db.refresh(assignment)
-        return assignment
+        return  AssignmentResponse.model_validate(assignment)
     
     def get_assignment_by_name(self, db: Session, name: str) -> AssignmentResponse:
         """Get assignment by name"""
-        return db.query(Assignment).filter(Assignment.name == name).first()
+        assignment = db.query(Assignment).filter(Assignment.title == name).first()
+        return AssignmentResponse.model_validate(assignment) if assignment else None
     
     

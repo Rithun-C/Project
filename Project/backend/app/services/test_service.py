@@ -1,46 +1,41 @@
 from sqlalchemy.orm import Session
-from sqlalchemy.exc import SQLAlchemyError
-from uuid import UUID
 from typing import List, Optional
+from uuid import UUID
 from datetime import datetime
+from pydantic import TypeAdapter
+
 
 from app.models.test import Test
-from app.schemas.test import TestCreate, TestUpdate, TestQueryParams
+from app.schemas.test import TestCreate, TestUpdate, TestQueryParams, TestResponse
 
 class TestService:
 
     @staticmethod
-    def create_test(db: Session, test_data: TestCreate) -> Test:
-        new_test = Test(
-            title=test_data.title,
-            subject_id=test_data.subject_id,
-            teacher_id=test_data.teacher_id,
-            section_id=test_data.section_id,
-            scheduled_date=test_data.scheduled_date,
-            total_marks=test_data.total_marks,
-        )
+    def create_test(db: Session, test_data: TestCreate) -> TestResponse:
+        new_test = Test(**test_data.model_dump())
         db.add(new_test)
         db.commit()
         db.refresh(new_test)
-        return new_test
+        return TestResponse.model_validate(new_test)
 
     @staticmethod
-    def get_test_by_id(db: Session, test_id: UUID) -> Optional[Test]:
-        return db.query(Test).filter(Test.id == test_id).first()
+    def get_test_by_id(db: Session, test_id: UUID) -> Optional[TestResponse]:
+        test = db.query(Test).filter(Test.id == test_id).first()
+        return TestResponse.model_validate(test) if test else None
 
     @staticmethod
-    def update_test(db: Session, test_id: UUID, update_data: TestUpdate) -> Optional[Test]:
+    def update_test(db: Session, test_id: UUID, update_data: TestUpdate) -> Optional[TestResponse]:
         test = db.query(Test).filter(Test.id == test_id).first()
         if not test:
             return None
 
-        for field, value in update_data.dict(exclude_unset=True).items():
+        for field, value in update_data.model_dump(exclude_unset=True).items():
             setattr(test, field, value)
 
         test.updated_at = datetime.utcnow()
         db.commit()
         db.refresh(test)
-        return test
+        return TestResponse.model_validate(test)
 
     @staticmethod
     def delete_test(db: Session, test_id: UUID) -> bool:
@@ -53,10 +48,7 @@ class TestService:
         return True
 
     @staticmethod
-    def list_tests(
-        db: Session,
-        query: TestQueryParams
-    ) -> (List[Test], int):
+    def list_tests(db: Session, query: TestQueryParams) -> List[TestResponse]:
         query_set = db.query(Test)
 
         if query.subject_id:
@@ -74,10 +66,11 @@ class TestService:
         offset = (query.page - 1) * query.per_page
         tests = query_set.order_by(Test.scheduled_date.desc()).offset(offset).limit(query.per_page).all()
 
-        return tests, total
+        # Convert SQLAlchemy models to Pydantic models
+        return TypeAdapter(List[TestResponse]).validate_python(tests)
 
     @staticmethod
-    def toggle_test_active_status(db: Session, test_id: UUID, is_active: bool) -> Optional[Test]:
+    def toggle_test_active_status(db: Session, test_id: UUID, is_active: bool) -> Optional[TestResponse]:
         test = db.query(Test).filter(Test.id == test_id).first()
         if not test:
             return None
@@ -86,4 +79,4 @@ class TestService:
         test.updated_at = datetime.utcnow()
         db.commit()
         db.refresh(test)
-        return test
+        return TestResponse.model_validate(test)

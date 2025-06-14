@@ -8,7 +8,7 @@ class DepartmentService:
     @staticmethod
     def create_department(db: Session, department_data: DepartmentCreate) -> DepartmentResponse:
         """Create a new department"""
-        new_department = Department(**department_data.dict())
+        new_department = Department(**department_data.model_dump())
         db.add(new_department)
         db.commit()
         db.refresh(new_department)
@@ -48,7 +48,7 @@ class DepartmentService:
         if not department:
             raise ValueError("Department not found")
 
-        for key, value in department_data.dict().items():
+        for key, value in department_data.model_dump().items():
             setattr(department, key, value)
 
         db.commit()

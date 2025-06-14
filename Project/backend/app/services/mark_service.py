@@ -6,25 +6,26 @@ from datetime import datetime
 from app.models.marks import Marks
 from app.schemas.marks import (
     MarksCreate, MarksUpdate, MarksQueryParams,
-    MarksStatistics
+    MarksStatistics,MarksResponse
 )
 from fastapi import HTTPException, status
 
 class MarksService:
     @staticmethod
-    def create_marks(db: Session, marks_data: MarksCreate) -> Marks:
-        new_marks = Marks(**marks_data.model_dump())
+    def create_marks(db: Session, marks_data: MarksCreate) -> MarksResponse:
+        new_marks = Marks(**marks_data)
         db.add(new_marks)
         db.commit()
         db.refresh(new_marks)
-        return new_marks
+        return MarksResponse.model_validate(new_marks)
 
     @staticmethod
-    def get_marks_by_id(db: Session, marks_id: UUID) -> Marks:
-        return db.query(Marks).filter(Marks.id == marks_id, Marks.is_active == True).first()
+    def get_marks_by_id(db: Session, marks_id: UUID) -> MarksResponse:
+        marks = db.query(Marks).filter(Marks.id == marks_id, Marks.is_active == True).first()
+        return MarksResponse.model_validate(marks) if marks else None
 
     @staticmethod
-    def update_marks(db: Session, marks_id: UUID, marks_data: MarksUpdate) -> Marks:
+    def update_marks(db: Session, marks_id: UUID, marks_data: MarksUpdate) -> MarksResponse:
         marks = db.query(Marks).filter(Marks.id == marks_id, Marks.is_active == True).first()
         if not marks:
             raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Marks not found")
@@ -34,16 +35,8 @@ class MarksService:
 
         db.commit()
         db.refresh(marks)
-        return marks
+        return MarksResponse.model_validate(marks)
 
-    @staticmethod
-    def delete_marks(db: Session, marks_id: UUID) -> bool:
-        marks = db.query(Marks).filter(Marks.id == marks_id).first()
-        if not marks:
-            return False
-        db.delete(marks)
-        db.commit()
-        return True
 
     @staticmethod
     def list_marks(db: Session, params: MarksQueryParams):
@@ -79,11 +72,11 @@ class MarksService:
         }
 
     @staticmethod
-    def bulk_create_marks(db: Session, marks_list: list[MarksCreate]) -> list[Marks]:
+    def bulk_create_marks(db: Session, marks_list: list[MarksCreate]) -> list[MarksResponse]:
         marks_objects = [Marks(**m.model_dump()) for m in marks_list]
         db.bulk_save_objects(marks_objects)
         db.commit()
-        return marks_objects
+        return MarksResponse.model_validate(marks_objects, many=True)
 
     @staticmethod
     def get_statistics(db: Session) -> MarksStatistics:
