@@ -14,15 +14,15 @@ router = APIRouter()
 async def create_Teacher(
     teacher_data: TeacherCreate,
     db: Session = Depends(get_db),
-    token: str = Depends(oauth2_scheme)
+    # token: str = Depends(oauth2_scheme)
 ):
     """Create a new Teacher (Admin)"""
-    current_user = AuthService.get_current_user(db, token)
-    if not current_user or current_user.user_type not in ["admin", "teacher"]:
-        raise HTTPException(
-            status_code=status.HTTP_403_FORBIDDEN,
-            detail="Only admins can create teachers"
-        )
+    # current_user = AuthService.get_current_user(db, token)
+    # if not current_user or current_user.user_type not in ["admin", "teacher"]:
+    #     raise HTTPException(
+    #         status_code=status.HTTP_403_FORBIDDEN,
+    #         detail="Only admins can create teachers"
+    #     )
     
     # Check if teacher already exists
     if TeacherService.get_teacher_by_email(db, teacher_data.email):
